@@ -87,6 +87,12 @@ p a {
     font-weight: 700;
 }
 
+.picture0 {
+    display: block;
+    margin: auto;
+    max-width: 95%;
+}
+
 /* Desktop */
 @media only screen and (min-width:1024px) {
     .flex_container {
