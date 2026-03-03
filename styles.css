@@ -90,6 +90,7 @@ p a {
     font-weight: 700;
 }
 
+/* Desktop */
 @media only screen and (min-width:1024px) {
     .flex_container {
         display: flex;
@@ -117,8 +118,22 @@ p a {
     .hand {
         flex: none;
     }
+
+    .picture {
+        max-width: 480px;
+        height: auto;
+        margin-top: 6rem;
+
+    }
+
+    .figure {
+        position: relative;
+        top: -136px;
+        margin-bottom: 0;
+    }
 }
 
+/* Mobile */
 @media only screen and (max-width:1023px) {
     .all_rankings {
         display: flex;
@@ -151,5 +166,11 @@ p a {
     .rankings img {
         margin-bottom: 0;
         padding-bottom: 0;
+    }
+
+    .picture {
+        max-width: 320px;
+        height: auto;
+
     }
 }
