@@ -59,16 +59,13 @@ footer {
     color: #C9C9C9;
 }
 
-nav ul {
-    padding-left: 0px;
-}
-
 nav li {
-    display: inline-block;
-    margin: 0px 10px;
+    list-style-type: none;
+    margin: 1rem;
     padding: 2px;
     border-style: inset;
     border-color: #0B8457;
+    width: 120px;
 }
 
 nav a {
@@ -130,6 +127,10 @@ p a {
         position: relative;
         top: -136px;
         margin-bottom: 0;
+    }
+
+    nav li {
+        display: inline-block;
     }
 }
 
