@@ -99,6 +99,11 @@ p a {
 
 /* Desktop */
 @media only screen and (min-width:1024px) {
+    main {
+        margin-left: 5em;
+        margin-right: 10em;
+    }
+
     .flex_container {
         display: flex;
         gap: 2rem;
