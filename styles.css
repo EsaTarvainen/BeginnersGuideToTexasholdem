@@ -260,4 +260,8 @@ h2.styled-as-h3 {
         height: auto;
 
     }
+
+    .result-box {
+        margin-left: 40px;
+    }
 }
