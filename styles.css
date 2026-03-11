@@ -68,6 +68,19 @@ nav li {
     width: 120px;
 }
 
+main ul {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px 20px;
+    align-items: center;
+    max-width: 280px;
+}
+
+main li {
+    list-style-type: none;
+    display: contents;
+}
+
 nav a {
     color: #0B8457;
     text-decoration: none;
@@ -95,6 +108,60 @@ p a {
     display: block;
     margin: auto;
     max-width: 95%;
+}
+
+#answer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.result-box {
+    border: 2px outset #0B8457;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 95%;
+}
+
+.result-box h3 {
+    margin: 0 0 10px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #C9C9C9;
+}
+
+.result-box h4 {
+    margin: 15px 0 5px 0;
+    border-bottom: 1px solid #C9C9C9;
+    padding-bottom: 5px;
+}
+
+.result-box p {
+    margin: 0 0 10px 0;
+}
+
+.result-box table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.result-box table td {
+    padding: 3px 10px 3px 0;
+}
+
+.result-box table td:last-child {
+    text-align: right;
+    padding-right: 0;
+}
+
+h2.styled-as-h3 {
+    font-family: "Montserrant", sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    text-align: left;
 }
 
 /* Desktop */

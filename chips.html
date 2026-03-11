@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Chip distribution</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="author" content="Esa">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <link href="styles.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <h1>Beginner's Guide</h1>
+            <img class="logo_img" src="Pictures/Designer.svg" alt="logo">
+            <h1>Texas hold 'em</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href=index.html>Home</a></li>
+                <li><a href="rules.html">Rules</a></li>
+                <li><a href="rankings.html">Hand rankings</a></li>
+                <li><a href="strategy.html">Beginner tips</a></li>
+                <li><a class="active_nav" href="chips.html">Chip setup</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2 class="styled-as-h3">Chip setup</h2>
+        <form onsubmit="return false;">
+            <ul>
+
+                <li>
+                    <label for="players">Number of players:</label>
+                    <select id="players">
+                        <option value="">-- Select --</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+                </li>
+                <li>
+                    <label for="gametype">Game type:</label>
+                    <select id="gametype">
+                        <option value="">-- Select --</option>
+                        <option value="cash">Cash game</option>
+                        <option value="tournament">Tournament</option>
+                    </select>
+                </li>
+                <li>
+                    <label for="stackdepth">Stack depth:</label>
+                    <select id="stackdepth">
+                        <option value="">-- Select --</option>
+                        <option value="short">Short stack</option>
+                        <option value="deep">Deep stack</option>
+                    </select>
+                </li>
+                <li>
+                    <input type="button" id="button" value="Find setup" onclick="search()">
+                </li>
+            </ul>
+        </form>
+        <div id="answer"></div>
+        <script>
+            let games = [{
+                players: 3,
+                smallblind: 1, // dollars
+                bigblind: 2, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    1: 15,
+                    5: 15,
+                    10: 31,
+                    25: 8
+                }
+            },
+            {
+                players: 5,
+                smallblind: 5, // dollars
+                bigblind: 10, // dollars
+                gametype: "cash",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    5: 5,
+                    10: 15,
+                    25: 1,
+                    50: 6,
+                    100: 10
+                },
+                rebuy: { // first value, then amount
+                    5: 5,
+                    10: 5,
+                    25: 1,
+                    50: 4,
+                    100: 7
+                }
+            },
+            {
+                players: 3,
+                smallblind: 5, // dollars
+                bigblind: 10, // dollars
+                gametype: "tournament",
+                stackdepth: "short",
+                chips: {
+                    5: 16,
+                    10: 22,
+                    25: 8,
+                }
+            },
+            {
+                players: 4,
+                smallblind: 5, // dollars
+                bigblind: 10, // dollars
+                gametype: "tournament",
+                stackdepth: "short",
+                chips: { // first value, then amount
+                    5: 12,
+                    10: 24,
+                    25: 6,
+                    50: 1
+                }
+            },
+            {
+                players: 5,
+                smallblind: 5, // dollars
+                bigblind: 10, // dollars
+                gametype: "tournament",
+                stackdepth: "short",
+                chips: { // first value, then amount
+                    5: 10,
+                    10: 20,
+                    25: 4,
+                    50: 3
+                }
+            },
+            {
+                players: 6,
+                smallblind: 5, // dollars
+                bigblind: 10, // dollars
+                gametype: "tournament",
+                stackdepth: "short",
+                chips: { // first value, then amount
+                    5: 8,
+                    10: 16,
+                    25: 4,
+                    50: 4
+                }
+            },
+            {
+                players: 7,
+                smallblind: 5, // dollars
+                bigblind: 10, // dollars
+                gametype: "tournament",
+                stackdepth: "short",
+                chips: { // first value, then amount
+                    5: 7,
+                    10: 14,
+                    25: 3,
+                    50: 5
+                }
+            },
+            {
+                players: 8,
+                smallblind: 5, // dollars
+                bigblind: 10, // dollars
+                gametype: "tournament",
+                stackdepth: "short",
+                chips: { // first value, then amount
+                    5: 6,
+                    10: 12,
+                    25: 2,
+                    50: 6
+                }
+            },
+            {
+                players: 3,
+                smallblind: 5, // dollars
+                bigblind: 10, // dollars
+                gametype: "cash",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    5: 10,
+                    10: 25,
+                    25: 8,
+                    50: 8,
+                    100: 6
+                },
+                rebuy: { // first value, then amount
+                    5: 6,
+                    10: 7,
+                    50: 6,
+                    100: 6
+                }
+            },
+            {
+                players: 4,
+                smallblind: 5, // dollars
+                bigblind: 10, // dollars
+                gametype: "cash",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    5: 6,
+                    10: 17,
+                    25: 6,
+                    50: 7,
+                    100: 8
+                },
+                rebuy: { // first value, then amount
+                    5: 6,
+                    10: 7,
+                    50: 4,
+                    100: 7
+                }
+            },
+            {
+                players: 3,
+                smallblind: 5, // dollars
+                bigblind: 10, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    5: 16,
+                    10: 32,
+                    25: 8,
+                    50: 16,
+                    100: 6
+                }
+            },
+            {
+                players: 4,
+                smallblind: 5, // dollars
+                bigblind: 10, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    5: 12,
+                    10: 24,
+                    25: 6,
+                    50: 11,
+                    100: 5
+                }
+            },
+            {
+                players: 5,
+                smallblind: 5, // dollars
+                bigblind: 10, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    5: 10,
+                    10: 20,
+                    25: 4,
+                    50: 9,
+                    100: 7
+                }
+            },
+            {
+                players: 6,
+                smallblind: 5, // dollars
+                bigblind: 10, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    5: 8,
+                    10: 16,
+                    25: 4,
+                    50: 8,
+                    100: 8
+                }
+            },
+            {
+                players: 7,
+                smallblind: 5, // dollars
+                bigblind: 10, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    5: 7,
+                    10: 14,
+                    25: 3,
+                    50: 7,
+                    100: 9
+                }
+            },
+            {
+                players: 8,
+                smallblind: 5, // dollars
+                bigblind: 10, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    5: 6,
+                    10: 12,
+                    25: 2,
+                    50: 6,
+                    100: 5
+                }
+            },
+            {
+                players: 9,
+                smallblind: 5, // dollars
+                bigblind: 10, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    5: 5,
+                    10: 10,
+                    25: 1,
+                    50: 5,
+                    100: 6
+                }
+            },
+            {
+                players: 3,
+                smallblind: 10, // dollars
+                bigblind: 20, // dollars
+                gametype: "cash",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    10: 20,
+                    50: 8,
+                    100: 19,
+                    500: 7,
+                    1000: 4
+                },
+                rebuy: { // first value, then amount
+                    10: 10,
+                    50: 8,
+                    100: 10,
+                    500: 5,
+                    1000: 2
+                }
+            },
+            {
+                players: 3,
+                smallblind: 10, // dollars
+                bigblind: 20, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    10: 30,
+                    50: 16,
+                    100: 29,
+                    500: 16,
+                    1000: 8
+                }
+            },
+            {
+                players: 4,
+                smallblind: 10, // dollars
+                bigblind: 20, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    10: 25,
+                    50: 11,
+                    100: 22,
+                    500: 12,
+                    1000: 6
+                }
+            },
+            {
+                players: 5,
+                smallblind: 10, // dollars
+                bigblind: 20, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    10: 20,
+                    50: 10,
+                    100: 18,
+                    500: 9,
+                    1000: 3
+                }
+            },
+            {
+                players: 6,
+                smallblind: 10, // dollars
+                bigblind: 20, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    5: 8,
+                    10: 16,
+                    25: 4,
+                    50: 8,
+                    100: 13,
+                    500: 6
+                }
+            },
+            {
+                players: 7,
+                smallblind: 10, // dollars
+                bigblind: 20, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    5: 7,
+                    10: 14,
+                    25: 3,
+                    50: 7,
+                    100: 14,
+                    500: 6
+                }
+            },
+            {
+                players: 3,
+                smallblind: 50, // dollars
+                bigblind: 100, // dollars
+                gametype: "cash",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    50: 10,
+                    100: 25,
+                    500: 8,
+                    1000: 3
+                },
+                rebuy: { // first value, then amount
+                    50: 6,
+                    100: 7,
+                    500: 8,
+                    1000: 5
+                }
+            },
+            {
+                players: 4,
+                smallblind: 50, // dollars
+                bigblind: 100, // dollars
+                gametype: "cash",
+                stackdepth: "short",
+                chips: { // first value, then amount
+                    50: 6,
+                    100: 17,
+                    500: 6,
+                    1000: 3
+                },
+                rebuy: { // first value, then amount
+                    50: 6,
+                    100: 7,
+                    500: 6,
+                    1000: 3
+                }
+            },
+            {
+                players: 3,
+                smallblind: 50, // dollars
+                bigblind: 100, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    50: 16,
+                    100: 32,
+                    500: 16,
+                    1000: 8
+                }
+            },
+            {
+                players: 4,
+                smallblind: 50, // dollars
+                bigblind: 100, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    50: 12,
+                    100: 24,
+                    500: 12,
+                    1000: 6
+                }
+            },
+            {
+                players: 5,
+                smallblind: 50, // dollars
+                bigblind: 100, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    50: 10,
+                    100: 20,
+                    500: 10,
+                    1000: 5
+                }
+            },
+            {
+                players: 6,
+                smallblind: 50, // dollars
+                bigblind: 100, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    50: 8,
+                    100: 16,
+                    500: 8,
+                    1000: 4
+                }
+            },
+            {
+                players: 7,
+                smallblind: 50, // dollars
+                bigblind: 100, // dollars
+                gametype: "tournament",
+                stackdepth: "short",
+                chips: { // first value, then amount
+                    50: 6,
+                    100: 12,
+                    500: 6,
+                    1000: 3
+                }
+            },
+            {
+                players: 8,
+                smallblind: 50, // dollars
+                bigblind: 100, // dollars
+                gametype: "tournament",
+                stackdepth: "short",
+                chips: { // first value, then amount
+                    50: 6,
+                    100: 12,
+                    500: 6,
+                    1000: 3
+                }
+            },
+            {
+                players: 3,
+                smallblind: 50, // dollars
+                bigblind: 100, // dollars
+                gametype: "tournament",
+                stackdepth: "short",
+                chips: { // first value, then amount
+                    50: 16,
+                    100: 22,
+                    500: 4,
+                }
+            },
+            {
+                players: 4,
+                smallblind: 50, // dollars
+                bigblind: 100, // dollars
+                gametype: "tournament",
+                stackdepth: "short",
+                chips: { // first value, then amount
+                    50: 12,
+                    100: 24,
+                    500: 4,
+                }
+            },
+            {
+                players: 5,
+                smallblind: 50, // dollars
+                bigblind: 100, // dollars
+                gametype: "tournament",
+                stackdepth: "short",
+                chips: { // first value, then amount
+                    50: 10,
+                    100: 20,
+                    500: 5,
+                }
+            },
+            {
+                players: 6,
+                smallblind: 50, // dollars
+                bigblind: 100, // dollars
+                gametype: "tournament",
+                stackdepth: "short",
+                chips: { // first value, then amount
+                    50: 8,
+                    100: 16,
+                    500: 6,
+                }
+            },
+            {
+                players: 7,
+                smallblind: 50, // dollars
+                bigblind: 100, // dollars
+                gametype: "tournament",
+                stackdepth: "short",
+                chips: { // first value, then amount
+                    50: 6,
+                    100: 12,
+                    500: 7,
+                }
+            },
+            {
+                players: 8,
+                smallblind: 50, // dollars
+                bigblind: 100, // dollars
+                gametype: "tournament",
+                stackdepth: "short",
+                chips: { // first value, then amount
+                    50: 6,
+                    100: 12,
+                    500: 5,
+                    1000: 1
+                }
+            },
+            {
+                players: 3,
+                smallblind: 100, // dollars
+                bigblind: 200, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    100: 30,
+                    500: 14,
+                    1000: 5,
+                    5000: 1
+                }
+            },
+            {
+                players: 4,
+                smallblind: 100, // dollars
+                bigblind: 200, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    100: 25,
+                    500: 9,
+                    1000: 3,
+                    5000: 2
+                }
+            },
+            {
+                players: 5,
+                smallblind: 100, // dollars
+                bigblind: 200, // dollars
+                gametype: "tournament",
+                stackdepth: "deep",
+                chips: { // first value, then amount
+                    100: 20,
+                    500: 10,
+                    1000: 3,
+                    5000: 2
+                }
+            },
+            {
+                players: 3,
+                smallblind: 500, // dollars
+                bigblind: 1000, // dollars
+                gametype: "tournament",
+                stackdepth: "short",
+                chips: { // first value, then amount
+                    500: 14,
+                    1000: 8,
+                    5000: 3,
+                    10000: 2
+                }
+            },
+            ];
+            console.log(games.length);
+            let text = "";
+            // function that fetches input from HTML, goes through the array, finds matches and builds the answer text
+            function search() {
+                text = "";
+                let players = Number(document.getElementById("players").value);
+                let gametype = document.getElementById("gametype").value;
+                let stackdepth = document.getElementById("stackdepth").value;
+                // Checking if all three dropdown inputs have content
+                if (players == "") {
+                    text = "Please select the number of players";
+                } else if (gametype == "") {
+                    text = "Please select a game type";
+                } else if (stackdepth == "") {
+                    text = "Please select a stack depth";
+                } else {
+                    let found = false; // No match by default
+                    for (let i = 0; i < games.length; i++) {
+                        if (players == games[i].players && gametype == games[i].gametype && stackdepth == games[i].stackdepth) {
+                            found = true; // We have a match
+                            // Calculations
+                            let stack = 0;
+                            let totalChips = 0;
+                            for (let value in games[i].chips) {
+                                stack += Number(value) * games[i].chips[value];
+                                totalChips += games[i].chips[value];
+                            }
+                            let stackBB = stack / games[i].bigblind;
+                            // Building a chips table
+                            let chipsTable = "";
+                            for (let value in games[i].chips) {
+                                chipsTable += `<tr><td>$${Number(value).toLocaleString("en-US")}</td><td>${games[i].chips[value]}</td></tr>`;
+                            }
+                            // Building a re-buy table if it's a cash game
+                            let rebuyHTML = "";
+                            if (games[i].rebuy) {
+                                let rebuyStack = 0;
+                                let rebuyTable = "";
+                                for (let value in games[i].rebuy) {
+                                    rebuyStack += Number(value) * games[i].rebuy[value];
+                                    rebuyTable += `<tr><td>$${Number(value).toLocaleString("en-US")}</td><td>${games[i].rebuy[value]}</td></tr>`;
+                                }
+                                let rebuyStackBB = rebuyStack / games[i].bigblind;
+                                rebuyHTML = `
+        <h4>Rebuy — $${rebuyStack.toLocaleString("en-US")} (${rebuyStackBB} BB):</h4>
+        <table>
+            ${rebuyTable}
+        </table>
+    `;
+                            }
+                            // Building the final answer
+                            text += `
+    <div class="result-box">
+        <h3>Blinds: $${games[i].smallblind.toLocaleString("en-US")} / $${games[i].bigblind.toLocaleString("en-US")}</h3>
+        <p>Stack: $${stack.toLocaleString("en-US")} (${stackBB} BB)</p>
+        <h4>Chips per player (${totalChips} total):</h4>
+        <table>
+            ${chipsTable}
+        </table>
+        ${rebuyHTML}
+    </div>
+`;
+                        }
+                    }
+                    if (!found) {
+                        text = "No results found";
+                    }
+                }
+                showresult();
+            }
+            function showresult() {
+                document.getElementById("answer").innerHTML = text;
+            }
+        </script>
+    </main>
+    <footer>&copy; 2026 Beginners Guide to Texas hold 'em. Created for educational purposes.</footer>
+</body>
+
+</html>
