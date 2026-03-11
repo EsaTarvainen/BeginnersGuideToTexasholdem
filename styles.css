@@ -118,7 +118,8 @@ p a {
 }
 
 .result-box {
-    border: 2px outset #0B8457;
+    border: outset #0B8457;
+    border-width: thick;
     border-radius: 8px;
     padding: 20px;
     max-width: 95%;
