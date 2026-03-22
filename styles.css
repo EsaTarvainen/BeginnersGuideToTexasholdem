@@ -64,7 +64,7 @@ nav li {
     margin: 1rem;
     padding: 2px;
     border-style: inset;
-    border-color: #0B8457;
+    border-color: #14BD76;
     width: 120px;
 }
 
@@ -82,7 +82,7 @@ main li {
 }
 
 nav a {
-    color: #0B8457;
+    color: #14BD76;
     text-decoration: none;
 }
 
@@ -91,7 +91,7 @@ p a {
 }
 
 .highlight1 {
-    color: #0B8457;
+    color: #14BD76;
     font-weight: 700;
 }
 
@@ -118,7 +118,7 @@ p a {
 }
 
 .result-box {
-    border: outset #0B8457;
+    border: outset #14BD76;
     border-width: thick;
     border-radius: 8px;
     padding: 20px;
@@ -191,7 +191,7 @@ h2.styled-as-h3 {
         display: flex;
         align-items: center;
         gap: 3rem;
-        border-bottom: 1px solid #0B8457;
+        border-bottom: 1px solid #14BD76;
         padding: 12px 0;
     }
 
@@ -235,7 +235,7 @@ h2.styled-as-h3 {
         max-width: 95%;
         border-style: outset;
         border-width: thick;
-        border-color: #0B8457;
+        border-color: #14BD76;
         border-radius: 30px;
         margin: 2rem;
         padding-left: 1rem;
