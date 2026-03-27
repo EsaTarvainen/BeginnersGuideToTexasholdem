@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Blinds</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="author" content="Esa">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <link href="styles.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <h1>Beginner's Guide</h1>
+            <img class="logo_img" src="Pictures/Designer.svg" alt="logo">
+            <h1>Texas hold 'em</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href=index.html>Home</a></li>
+                <li><a href="rules.html">Rules</a></li>
+                <li><a href="rankings.html">Hand rankings</a></li>
+                <li><a href="strategy.html">Beginner tips</a></li>
+                <li><a href="chips.html">Chip setup</a></li>
+                <li><a class="active_nav" href="blinds.html">Blinds timer</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2 class="styled-as-h3">Blinds timer</h2>
+
+        <!-- STATE 1: Form - always visible on page load -->
+        <form id="form" onsubmit="return false;">
+            <ul>
+                <li>
+                    <label for="smallblind">Starting small blind:</label>
+                    <input type="text" id="smallblind" size="3">
+                </li>
+                <li>
+                    <label for="interval">Level duration &#40;minutes&#41;:</label>
+                    <input type="text" id="interval" size="3">
+                </li>
+                <li>
+                    <label for="escalation">Blind increase rate:</label>
+                    <select id="escalation">
+                        <option value="">-- Select --</option>
+                        <!-- Option values are multipliers applied each level -->
+                        <option value="1.5">Gradual</option>
+                        <option value="2.0">Standard</option>
+                        <option value="2.5">Aggressive</option>
+                    </select>
+                </li>
+                <li><input type="button" id="generate_schedule" value="Generate Schedule" onclick="generateSchedule()">
+                </li>
+            </ul>
+        </form>
+        <div id="answer"></div>
+
+        <!-- STATE 2: Schedule preview - hidden until generateSchedule() runs -->
+        <div id="schedule-section" style="display: none;">
+            <div class="schedule-table">
+                <table id="table">
+                    <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th></th>
+                            <th>Blinds</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+
+                    </tbody>
+                    <tr>
+                        <td colspan="4">
+                            <input type="button" id="start-btn" value="Start timer" onclick="StartTimer()">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- STATE 3: Timer - hidden until StartTimer() runs -->
+        <div id="timer-section" style="display: none;">
+            <p id="countdown">00 : 00</p>
+            <p id="current_level"></p>
+            <p id="current_blinds"></p>
+            <hr>
+            <div id="timer-bottom">
+                <p id="next_blinds_label">Next</p>
+                <p id="next_blinds"></p>
+                <p id="elapsed_label">Total time</p>
+                <p id="elapsed_time"></p>
+            </div>
+            <div id="timer-buttons">
+                <input type="button" id="play_pause" onclick="playPause()" value="Play">
+                <input type="button" id="reset" value="Reset" onclick="reset()">
+            </div>
+        </div>
+
+        <script>
+            // --- Global variables ---
+            // These are declared globally so all functions can access and modify them
+
+            let schedule = [];      // Stores the generated blind levels as an array of objects
+            let myTimer = null;     // Holds the setInterval reference so it can be paused and stopped
+            let isRunning = false;  // Tracks whether the timer is currently running
+            let interval = 0;      // Level duration in seconds (converted from minutes on start)
+            let seconds = 0;       // Seconds remaining in the current level
+            let level = 0;         // Current level index (0-based) into the schedule array
+            let elapsed_seconds = 0; // Total seconds elapsed since the timer started
+            let wakeLock = null;
+
+            // --- Schedule generation ---
+
+            function generateSchedule() {
+                // Read and convert user inputs from the form
+                let StartingSmallBlind = Number(document.getElementById("smallblind").value);
+                let escalation = Number(document.getElementById("escalation").value);
+                let level_duration = Number(document.getElementById("interval").value);
+
+
+                // Check that the user inputs are valid
+                if (StartingSmallBlind <= 0 || isNaN(StartingSmallBlind)) {
+                    document.getElementById("answer").innerHTML = "Please put in a valid starting small blind";
+                } else if (level_duration <= 0 || isNaN(level_duration)) {
+                    document.getElementById("answer").innerHTML = "Please put in a valid level duration";
+                } else if (escalation == 0) {
+                    document.getElementById("answer").innerHTML = "Please select a blind increase rate";
+                } else {
+
+                    // Calculate the big blind
+                    let StartingBigBlind = StartingSmallBlind * 2;
+
+                    // Initialize the schedule with the first level using the starting blinds
+                    schedule = [{
+                        level: 1,
+                        SB: StartingSmallBlind,
+                        BB: StartingBigBlind
+                    }];
+
+                    // Generate the remaining levels
+                    for (let i = 0; i < 9; i++) {
+                        let blindlevel = i + 2;
+
+                        // Multiply the previous small blind by the escalation multiplier
+                        let SmallBlind = schedule[schedule.length - 1].SB * escalation;
+
+                        // First rounding pass: snap to nearest multiple of the starting small blind
+                        // This ensures blinds can always be paid with the chips in play
+                        SmallBlind = Math.round(SmallBlind / StartingSmallBlind) * StartingSmallBlind;
+
+                        // Second rounding pass: snap to a round number based on the magnitude of the value
+                        // This keeps large numbers clean and natural looking (e.g. 1400 instead of 1350)
+                        let magnitude = Math.floor(Math.log10(SmallBlind));
+                        let roundingUnit = Math.pow(10, magnitude - 1);
+                        SmallBlind = Math.round(SmallBlind / roundingUnit) * roundingUnit;
+
+                        // Big blind is always double the small blind
+                        let BigBlind = SmallBlind * 2;
+
+                        // Add the new level to the schedule
+                        schedule.push({
+                            level: blindlevel,
+                            SB: SmallBlind,
+                            BB: BigBlind
+                        });
+                    }
+
+                    console.log(schedule);
+
+                    // Clear any previously generated table rows before building new ones
+                    let table = document.getElementById("table-body");
+                    table.innerHTML = "";
+
+                    // Build the table rows dynamically from the schedule array
+                    for (let i = 0; i < schedule.length; i++) {
+                        let row = document.createElement("tr");
+                        let cell = document.createElement("td");
+                        let cell2 = document.createElement("td");
+                        let cell3 = document.createElement("td");
+                        let cell4 = document.createElement("td");
+
+
+                        // Populate cells with level number and formatted blind amounts
+                        cell.textContent = schedule[i].level;
+                        cell2.textContent = "$" + schedule[i].SB.toLocaleString("en-US");
+                        cell3.textContent = "/";
+                        cell4.textContent = "$" + schedule[i].BB.toLocaleString("en-US");
+
+
+                        row.appendChild(cell);
+                        row.appendChild(cell2);
+                        row.appendChild(cell3);
+                        row.appendChild(cell4);
+                        table.appendChild(row);
+                    }
+
+                    // Reveal the schedule section (STATE 2)
+                    document.getElementById("schedule-section").style.display = "block";
+                }
+            }
+
+            // --- Timer control ---
+
+            async function StartTimer() {
+                try {
+                    wakeLock = await navigator.wakeLock.request("screen");
+                } catch (error) {
+                    console.log("Wake lock not supported or failed");
+                }
+                // Transition to STATE 3: show timer, hide form and schedule
+                document.getElementById("timer-section").style.display = "block";
+                document.getElementById("form").style.display = "none";
+                document.getElementById("schedule-section").style.display = "none";
+
+                // Initialize all timer variables fresh
+                interval = Number(document.getElementById("interval").value) * 60;
+                seconds = interval;
+                level = 0;
+                elapsed_seconds = 0;
+                isRunning = false;
+
+                // Start the timer by calling playPause (which handles the setInterval)
+                playPause();
+            }
+
+            function tick() {
+                // When the countdown hits zero, advance to the next level and play a beep
+                if (seconds <= 0) {
+                    level = level + 1;
+                    seconds = interval;
+                    playBeep();
+                }
+
+                // Decrease the countdown by one second
+                seconds = seconds - 1;
+
+                // Format seconds as MM:SS and update the countdown display
+                let minutes = Math.floor(seconds / 60);
+                let secs = seconds % 60;
+                let formatted = String(minutes).padStart(2, "0") + " : " + String(secs).padStart(2, "0");
+                document.getElementById("countdown").textContent = formatted;
+
+                // Update the level
+                let current_level = schedule[level].level;
+                document.getElementById("current_level").textContent = "Level " + current_level;
+
+                // Update current blind level display
+                let current_smallblind = schedule[level].SB;
+                let current_bigblind = schedule[level].BB;
+                document.getElementById("current_blinds").textContent = "$" + current_smallblind.toLocaleString("en-US") + " / " + "$" + current_bigblind.toLocaleString("en-US");
+
+                // Update next blind level display, or show a message on the final level
+                if (level < schedule.length - 1) {
+                    let next_smallblind = schedule[level + 1].SB;
+                    let next_bigblind = schedule[level + 1].BB;
+                    document.getElementById("next_blinds").textContent = "$" + next_smallblind.toLocaleString("en-US") + " / " + "$" + next_bigblind.toLocaleString("en-US");
+                } else {
+                    document.getElementById("next_blinds").textContent = "No next level";
+                }
+
+                // Update total elapsed time display
+                elapsed_seconds = elapsed_seconds + 1;
+                let elapsed_minutes = Math.floor(elapsed_seconds / 60);
+                let elapsed_secs = elapsed_seconds % 60;
+                let elapsed_formatted = String(elapsed_minutes).padStart(2, "0") + " : " + String(elapsed_secs).padStart(2, "0");
+                document.getElementById("elapsed_time").textContent = elapsed_formatted;
+
+                // Stop the timer when all levels have been played
+                if (level == schedule.length) {
+                    clearInterval(myTimer);
+                }
+
+                // Turn countdown red when one minute or less remains in the level
+                if (seconds <= 60) {
+                    document.getElementById("countdown").style.color = "#FC5263";
+                } else {
+                    document.getElementById("countdown").style.color = "";
+                }
+            }
+
+            function playPause() {
+                if (!isRunning) {
+                    // Start the timer: create a new interval that calls tick() every second
+                    myTimer = setInterval(tick, 1000);
+                    isRunning = true;
+                    document.getElementById("play_pause").value = "Pause";
+                } else {
+                    // Pause the timer: stop the interval without resetting any variables
+                    clearInterval(myTimer);
+                    isRunning = false;
+                    document.getElementById("play_pause").value = "Play";
+                }
+            }
+
+            function reset() {
+                wakeLock.release();
+                // Transition back to STATE 1: show form, hide timer and schedule
+                document.getElementById("timer-section").style.display = "none";
+                document.getElementById("schedule-section").style.display = "none";
+                document.getElementById("form").style.display = "block";
+
+                // Stop the timer if it's running
+                clearInterval(myTimer);
+
+                // Reset all global variables to their initial values
+                schedule = [];
+                myTimer = null;
+                isRunning = false;
+                interval = 0;
+                seconds = 0;
+                level = 0;
+                elapsed_seconds = 0;
+
+                // Reset the play/pause button label
+                document.getElementById("play_pause").value = "Play";
+            }
+
+            // --- Audio ---
+
+            function playBeep() {
+                // Create a short beep using the Web Audio API (no external sound file needed)
+                let audioContext = new AudioContext();
+                let oscillator = audioContext.createOscillator();
+                let gainNode = audioContext.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                oscillator.frequency.value = 800; // Pitch of the beep in Hz
+                gainNode.gain.setValueAtTime(1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.5); // Fade out over 0.5 seconds
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            }
+        </script>
+    </main>
+
+    <footer>&copy; 2026 Beginners Guide to Texas hold 'em. Created for educational purposes.</footer>
+
+</body>
+
+</html>

@@ -1,3 +1,8 @@
+/* ============================================
+   BASE STYLES
+   Global styles applied across all pages
+   ============================================ */
+
 body {
     display: flex;
     flex-direction: column;
@@ -7,9 +12,8 @@ body {
     font-family: "Open Sans", "Roboto", sans-serif;
 }
 
-header {
-    text-align: center;
-}
+
+/* --- Typography --- */
 
 h1 {
     font-family: "Cormorant Garamond", serif;
@@ -17,7 +21,6 @@ h1 {
     font-weight: 600;
     line-height: 1.2;
     letter-spacing: 0.5px;
-
 }
 
 h2 {
@@ -29,12 +32,23 @@ h2 {
 }
 
 h3 {
-    font-family: "Montserrant", sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-size: 1.4rem;
     font-weight: 600;
     line-height: 1.35;
     margin-top: 2.5rem;
     margin-bottom: 1rem;
+}
+
+/* Used when an h2 element needs to visually match h3 styling */
+h2.styled-as-h3 {
+    font-family: "Montserrat", sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    text-align: left;
 }
 
 p {
@@ -43,20 +57,17 @@ p {
     font-weight: 400;
 }
 
-footer {
-    font-size: 0.875rem;
-    color: #8A8A8A;
-    margin-top: auto;
+
+/* --- Header & Navigation --- */
+
+header {
+    text-align: center;
 }
 
 .logo {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.active_nav {
-    color: #C9C9C9;
 }
 
 nav li {
@@ -68,41 +79,54 @@ nav li {
     width: 120px;
 }
 
-main ul {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 10px 20px;
-    align-items: center;
-    max-width: 280px;
-}
-
-main li {
-    list-style-type: none;
-    display: contents;
-}
-
 nav a {
     color: #14BD76;
     text-decoration: none;
 }
 
+/* Highlights the current page in the navigation */
+.active_nav {
+    color: #C9C9C9;
+}
+
+
+/* --- Footer --- */
+
+footer {
+    font-size: 0.875rem;
+    color: #8A8A8A;
+    margin-top: auto;
+}
+
+
+/* --- Links --- */
+
 p a {
     color: #C9C9C9;
 }
 
+
+/* --- Highlight utility classes --- */
+
+/* Green highlight, used for key terms */
 .highlight1 {
     color: #14BD76;
     font-weight: 700;
 }
 
+/* Red highlight, used for warnings or emphasis */
 .highlight2 {
     color: #FC5263;
     font-weight: 700;
 }
 
+/* Bold highlight, no color change */
 .highlight3 {
     font-weight: 700;
 }
+
+
+/* --- Images --- */
 
 .picture0 {
     display: block;
@@ -110,6 +134,68 @@ p a {
     max-width: 95%;
 }
 
+
+/* ============================================
+   FORMS
+   Shared form styles used across multiple pages
+   ============================================ */
+
+/* Two column grid layout: label on left, input on right */
+main ul {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px 20px;
+    align-items: center;
+    max-width: 360px;
+}
+
+/* Makes list items participate in the parent grid */
+main li {
+    list-style-type: none;
+    display: contents;
+}
+
+/* Styled text inputs and dropdowns */
+main input[type="text"],
+main select {
+    background-color: #222429;
+    color: #C9C9C9;
+    border: 1px solid #14BD76;
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-size: 1rem;
+    font-family: "Open Sans", "Roboto", sans-serif;
+}
+
+/* Submit button on the chip setup page */
+#find_setup {
+    padding: 8px 24px;
+    background-color: transparent;
+    color: #14BD76;
+    border: 1px solid #14BD76;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+/* Submit button on the blinds timer page */
+#generate_schedule {
+    padding: 8px 24px;
+    background-color: transparent;
+    color: #14BD76;
+    border: 1px solid #14BD76;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+
+/* ============================================
+   CHIP SETUP PAGE
+   Styles for the result boxes on chips.html
+   ============================================ */
+
+/* Container for search results, displays boxes in a wrapping row */
 #answer {
     display: flex;
     flex-wrap: wrap;
@@ -117,6 +203,7 @@ p a {
     margin-top: 20px;
 }
 
+/* Individual result card with green border */
 .result-box {
     border: outset #14BD76;
     border-width: thick;
@@ -155,17 +242,187 @@ p a {
     padding-right: 0;
 }
 
-h2.styled-as-h3 {
-    font-family: "Montserrant", sans-serif;
-    font-size: 1.4rem;
-    font-weight: 600;
-    line-height: 1.35;
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
+
+/* ============================================
+   HAND RANKINGS PAGE
+   Styles for the rankings layout on rankings.html
+   ============================================ */
+
+.all_rankings {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-left: min(6vw, 48px);
+}
+
+.rankings {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    border-bottom: 1px solid #14BD76;
+    padding: 12px 0;
+}
+
+.hand {
+    flex: none;
+}
+
+.picture {
+    max-width: 480px;
+    height: auto;
+    margin-top: 6rem;
+}
+
+
+/* ============================================
+   BLINDS TIMER PAGE
+   Styles specific to blinds.html
+   ============================================ */
+
+/* --- Schedule table --- */
+
+/* Wrapper box with green border around the schedule table */
+.schedule-table {
+    border: outset #14BD76;
+    border-width: thick;
+    border-radius: 8px;
+    padding: 12px;
+    max-width: 260px;
+}
+
+.schedule-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.schedule-table td,
+.schedule-table th {
+    padding: 6px 2px;
+}
+
+/* Small blind column: right aligned toward the slash */
+.schedule-table td:nth-child(2) {
+    text-align: right;
+}
+
+/* Slash column: centered with equal padding on both sides */
+.schedule-table td:nth-child(3) {
+    text-align: center;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+/* Dividing line between each blind level row */
+.schedule-table tr {
+    border-bottom: 1px solid #C9C9C9;
+}
+
+/* Start timer button at the bottom of the schedule table */
+#start-btn {
+    width: 100%;
+    padding: 8px;
+    background-color: transparent;
+    color: #14BD76;
+    border: 1px solid #14BD76;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+
+/* --- Timer section --- */
+
+/* Hidden by default, revealed by StartTimer() */
+#timer-section {
+    display: none;
+    text-align: center;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+/* Large countdown display - the main focus of the timer */
+#countdown {
+    font-size: 5rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    margin: 0;
+}
+
+/* Current level indicator, dimmed to not compete with the blinds */
+#current_level {
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+    color: #8A8A8A;
+}
+
+/* Current blinds - prominently displayed below the countdown */
+#current_blinds {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+}
+
+/* Bottom row: next blinds on the left, elapsed time on the right */
+#timer-bottom {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 0;
+}
+
+#next_blinds {
+    font-size: 1.2rem;
     text-align: left;
 }
 
-/* Desktop */
+#elapsed_time {
+    font-size: 1.2rem;
+    text-align: right;
+}
+
+/* Small dimmed labels above next blinds and elapsed time */
+#next_blinds_label,
+#elapsed_label {
+    font-size: 0.8rem;
+    color: #8A8A8A;
+    margin: 0;
+}
+
+/* Play/pause and reset buttons centered below the timer */
+#timer-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+}
+
+/* Play/pause button in green */
+#play_pause {
+    padding: 8px 24px;
+    background-color: transparent;
+    color: #14BD76;
+    border: 1px solid #14BD76;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+/* Reset button in red to signal it's a destructive action */
+#reset {
+    padding: 8px 24px;
+    background-color: transparent;
+    color: #FC5263;
+    border: 1px solid #FC5263;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+
+/* ============================================
+   RESPONSIVE STYLES
+   ============================================ */
+
+/* --- Desktop (1024px and above) --- */
 @media only screen and (min-width:1024px) {
     main {
         margin-left: 5em;
@@ -178,7 +435,7 @@ h2.styled-as-h3 {
     }
 
     .flex_item {
-        flex: 1
+        flex: 1;
     }
 
     .all_rankings {
@@ -203,9 +460,9 @@ h2.styled-as-h3 {
         max-width: 480px;
         height: auto;
         margin-top: 6rem;
-
     }
 
+    /* Horizontal navigation on desktop */
     nav li {
         display: inline-block;
     }
@@ -220,7 +477,7 @@ h2.styled-as-h3 {
     }
 }
 
-/* Mobile */
+/* --- Mobile (1023px and below) --- */
 @media only screen and (max-width:1023px) {
     .all_rankings {
         display: flex;
@@ -259,10 +516,15 @@ h2.styled-as-h3 {
     .picture {
         max-width: 320px;
         height: auto;
-
     }
 
     #answer {
         margin-left: 40px;
+    }
+
+    /* Center the schedule table on mobile */
+    .schedule-table {
+        margin-left: auto;
+        margin-right: auto;
     }
 }
